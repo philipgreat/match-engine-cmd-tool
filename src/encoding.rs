@@ -92,12 +92,12 @@ pub fn deserialize_match_result(buf: &[u8]) -> Result<MatchResult, &'static str>
     current_idx += 4;
 
     // 7. Trade Time Network (u32)
-    let trade_time_network_bytes: [u8; 4] = buf[current_idx..current_idx + 4].try_into().map_err(|_| "Failed to read trade_time_network")?;
-    let trade_time_network = u32::from_be_bytes(trade_time_network_bytes);
+    let trade_network_time_bytes: [u8; 4] = buf[current_idx..current_idx + 4].try_into().map_err(|_| "Failed to read trade_network_time")?;
+    let trade_network_time = u32::from_be_bytes(trade_network_time_bytes);
     current_idx += 4;
 
     // 8. Internal Match Time (u32)
-    // 注意: 您的序列化代码中这里实际上是重复写入了 trade_time_network 的值，
+    // 注意: 您的序列化代码中这里实际上是重复写入了 trade_network_time 的值，
     // 解码时，我们根据 MatchResult 结构体字段来读，它应是 internal_match_time
     // 假设序列化代码的意图是 Trade Time (u32) + Internal Match Time (u32)。
     let internal_match_time_bytes: [u8; 4] = buf[current_idx..current_idx + 4].try_into().map_err(|_| "Failed to read internal_match_time")?;
@@ -111,7 +111,7 @@ pub fn deserialize_match_result(buf: &[u8]) -> Result<MatchResult, &'static str>
         sell_order_id,
         price,
         quantity,
-        trade_time_network,
+        trade_network_time,
         internal_match_time,
     })
 }
@@ -185,9 +185,9 @@ pub fn decode_broadcast_message(buf: &[u8]) -> Result<String, String> {
             let result = deserialize_match_result(buf)
                 .map_err(|e| format!("Failed to decode MatchResult: {}", e))?;
             
-            Ok(format!("🔥 TRADE: Product={} | Price={} | Qty={} | BuyID={} | BuyId={}| Net={}ns | Match={}ns", 
+            Ok(format!("🔥 TRADE: Product={} | Price={} | Qty={} | BuyID={} | SellId={}| Net={}ns | Match={}ns", 
                 result.product_id, result.price, result.quantity, result.buy_order_id, result.sell_order_id,
-                result.trade_time_network,
+                result.trade_network_time,
                 result.internal_match_time))
         },
         MSG_STATUS_BROADCAST => {
