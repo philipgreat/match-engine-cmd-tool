@@ -1,8 +1,8 @@
 [package]
-name = "order-test"
+name = "trading_client"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-clap = { version = "4.0", features = ["derive"] }
-
+clap = { version = "4.4", features = ["derive"] }
+socket2 = "0.5"
