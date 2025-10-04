@@ -185,8 +185,8 @@ pub fn decode_broadcast_message(buf: &[u8]) -> Result<String, String> {
             let result = deserialize_match_result(buf)
                 .map_err(|e| format!("Failed to decode MatchResult: {}", e))?;
             
-            Ok(format!("🔥 TRADE: Product={} | Price={} | Qty={} | BuyID={} | SellID={}", 
-                result.product_id, result.price, result.quantity, result.buy_order_id, result.sell_order_id))
+            Ok(format!("🔥 TRADE: Product={} | Price={} | Qty={} | BuyID={}  | MatchTime={}ns", 
+                result.product_id, result.price, result.quantity, result.buy_order_id, result.sell_order_id,result.internal_match_time))
         },
         MSG_STATUS_BROADCAST => {
             let stats = deserialize_stats_result(buf)
