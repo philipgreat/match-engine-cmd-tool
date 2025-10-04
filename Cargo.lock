@@ -168,7 +168,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "trading_client"
+name = "trading-client"
 version = "0.1.0"
 dependencies = [
  "clap",

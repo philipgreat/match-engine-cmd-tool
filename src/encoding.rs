@@ -14,7 +14,7 @@ const PAYLOAD_START: usize = 2;
 // 假设的 Checksum 计算函数
 pub fn calculate_checksum(buf: &[u8]) -> u8 {
     // Checksum is calculated over the payload (index 2 onwards)
-    buf[2..].iter().fold(0, |acc, &x| acc ^ x)
+    buf[1..].iter().fold(0, |acc, &x| acc ^ x)
 }
 
 // 序列化 Order 结构体
@@ -194,7 +194,7 @@ pub fn decode_broadcast_message(buf: &[u8]) -> Result<String, String> {
             let stats = deserialize_stats_result(buf)
                 .map_err(|e| format!("Failed to decode BroadcastStats: {}", e))?;
 
-            Ok(format!("📊 STATUS: Product={} | Bids={} | Asks={} | Matched={} | Received={}", 
+            Ok(format!("📊 STATUS: Product={} | BidSize={} | AskSize={} | Matched={} | Received={}", 
                 stats.product_id, stats.bids_size, stats.ask_size, stats.matched_orders, stats.total_received_orders))
         },
         _ => Err(format!("Unknown or unhandled message type: {:?}", buf)),
