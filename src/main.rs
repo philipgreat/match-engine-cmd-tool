@@ -151,7 +151,9 @@ fn receive_broadcasts(listener_socket:UdpSocket) -> Result<(), String> {
             Ok((len, src)) => {
                 // 仅为了演示，我们跳过校验和检查。实际应用中应在此处验证 buf[0]
                 let checksum_ok = calculate_checksum(&buf) == buf[0]; 
-                
+                if checksum_ok {
+                    //println!("check sum is fine");
+                }
                 // 假设校验和通过，进行解码
                 match decode_broadcast_message(&buf[..len]) {
                     Ok(decoded_msg) => {
