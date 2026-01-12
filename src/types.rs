@@ -5,12 +5,29 @@ use std::time::{SystemTime, UNIX_EPOCH, Duration};
 // --- Message Type Constants ---
 pub const MSG_ORDER_SUBMIT: u8 = 1;      // Client -> Engine: Order submission
 pub const MSG_ORDER_CANCEL: u8 = 2;      // Client -> Engine: Order cancellation
+
+
+
+
+
 pub const MSG_TRADE_BROADCAST: u8 = 10;  // Engine -> Client: Trade broadcast
 pub const MSG_STATUS_BROADCAST: u8 = 11; // Engine -> Client: Status broadcast
+
+
+
 
 // --- Order Type Constants ---
 pub const ORDER_TYPE_BUY: u8 = 1;          // Order side: Buy
 pub const ORDER_TYPE_SELL: u8 = 2;         // Order side: Sell
+
+pub const ORDER_TYPE_MOCK_BUY: u8 = 3; // Order side: Sell
+pub const ORDER_TYPE_MOCK_SELL: u8 = 4; // Order side: Sell
+
+
+
+
+
+
 pub const ORDER_PRICE_TYPE_LIMIT: u8 = 1;  // Order price type: Limit
 pub const ORDER_PRICE_TYPE_MARKET: u8 = 2; // Order price type: Market
 

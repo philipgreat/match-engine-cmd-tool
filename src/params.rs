@@ -1,7 +1,7 @@
 // src/params.rs
 
 use clap::{Parser, Subcommand};
-use crate::types::{ORDER_TYPE_BUY, ORDER_TYPE_SELL, ORDER_PRICE_TYPE_LIMIT, ORDER_PRICE_TYPE_MARKET};
+use crate::types::{ORDER_PRICE_TYPE_LIMIT, ORDER_PRICE_TYPE_MARKET, ORDER_TYPE_BUY, ORDER_TYPE_MOCK_SELL,ORDER_TYPE_MOCK_BUY, ORDER_TYPE_SELL};
 
 // --- 命令行参数结构体 ---
 
@@ -69,6 +69,8 @@ fn parse_order_type(s: &str) -> Result<u8, String> {
     match s.to_lowercase().as_str() {
         "buy" => Ok(ORDER_TYPE_BUY),
         "sell" => Ok(ORDER_TYPE_SELL),
+        "mockbuy" => Ok(ORDER_TYPE_MOCK_BUY),
+        "mocksell" => Ok(ORDER_TYPE_MOCK_SELL),
         _ => Err(format!("Invalid order type: {}. Must be 'buy' or 'sell'", s)),
     }
 }
