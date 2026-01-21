@@ -125,8 +125,8 @@ pub fn deserialize_stats_result(buf: &[u8]) -> Result<BroadcastStats, &'static s
     let mut current_idx = PAYLOAD_START;
 
     // 1. Instance Tag ([u8; 8])
-    let instance_tag: [u8; 8] = buf[current_idx..current_idx + 8].try_into().map_err(|_| "Failed to read instance_tag")?;
-    current_idx += 8;
+    let instance_tag: [u8; 16] = buf[current_idx..current_idx + 16].try_into().map_err(|_| "Failed to read instance_tag")?;
+    current_idx += 16;
 
     // 2. Product ID (u16)
     let product_id_bytes: [u8; 2] = buf[current_idx..current_idx + 2].try_into().map_err(|_| "Failed to read product_id")?;
@@ -185,7 +185,7 @@ pub fn decode_broadcast_message(buf: &[u8]) -> Result<String, String> {
             let result = deserialize_match_result(buf)
                 .map_err(|e| format!("Failed to decode MatchResult: {}", e))?;
             
-            Ok(format!("🔥 TRADE: Product={} | Price={} | Qty={} | BuyID={} | SellId={}| Net={}ns | Match={}ns", 
+            Ok(format!("🔥 TRADE: Product={} | Price={} | Qty={} | BuyOrderID={} | SellOrderId={}| Net={}ns | MatchCore={}ns", 
                 result.product_id, result.price, result.quantity, result.buy_order_id, result.sell_order_id,
                 result.trade_network_time,
                 result.internal_match_time))
@@ -194,7 +194,8 @@ pub fn decode_broadcast_message(buf: &[u8]) -> Result<String, String> {
             let stats = deserialize_stats_result(buf)
                 .map_err(|e| format!("Failed to decode BroadcastStats: {}", e))?;
 
-            Ok(format!("📊 STATUS: Product={} | BidSize={} | AskSize={} | Matched={} | Received={}", 
+            Ok(format!("📊 STATUS: Tag={} | Product={} | BidSize={} | AskSize={} | Matched={} | Received={}", 
+                std::str::from_utf8(&stats.instance_tag).unwrap(),
                 stats.product_id, stats.bids_size, stats.ask_size, stats.matched_orders, stats.total_received_orders))
         },
         _ => Err(format!("Unknown or unhandled message type: {:?}", buf)),
