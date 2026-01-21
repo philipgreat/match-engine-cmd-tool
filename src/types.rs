@@ -32,7 +32,7 @@ pub const ORDER_PRICE_TYPE_LIMIT: u8 = 1;  // Order price type: Limit
 pub const ORDER_PRICE_TYPE_MARKET: u8 = 2; // Order price type: Market
 
 // --- Message Size Constant ---
-pub const MESSAGE_TOTAL_SIZE: usize = 50; // All network packets are 50 bytes fixed size.
+pub const MESSAGE_TOTAL_SIZE: usize = 64; // All network packets are 50 bytes fixed size.
 
 // --- Data Structure Definitions ---
 
