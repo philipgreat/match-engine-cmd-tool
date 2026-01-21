@@ -26,8 +26,6 @@ pub const ORDER_TYPE_MOCK_SELL: u8 = 4; // Order side: Sell
 
 
 
-
-
 pub const ORDER_PRICE_TYPE_LIMIT: u8 = 1;  // Order price type: Limit
 pub const ORDER_PRICE_TYPE_MARKET: u8 = 2; // Order price type: Market
 
