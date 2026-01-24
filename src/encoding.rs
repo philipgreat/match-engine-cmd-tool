@@ -63,9 +63,9 @@ pub fn deserialize_match_result(buf: &[u8]) -> Result<MatchResult, &'static str>
     let mut current_idx = PAYLOAD_START;
 
     // 1. Instance Tag ([u8; 8])
-    let instance_tag: [u8; 8] = buf[current_idx..current_idx + 8].try_into().map_err(|_| "Failed to read instance_tag")?;
-    current_idx += 8;
-
+    let instance_tag: [u8; 16] = buf[current_idx..current_idx + 16].try_into().map_err(|_| "Failed to read instance_tag")?;
+    current_idx += 16;
+    
     // 2. Product ID (u16)
     let product_id_bytes: [u8; 2] = buf[current_idx..current_idx + 2].try_into().map_err(|_| "Failed to read product_id")?;
     let product_id = u16::from_be_bytes(product_id_bytes);
