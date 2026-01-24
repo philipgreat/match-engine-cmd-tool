@@ -134,38 +134,54 @@ fn handle_cancel(args: CancelArgs, socket: &UdpSocket, trade_addr: &str) -> Resu
 }
 
 
-
-fn receive_broadcasts(listener_socket:UdpSocket) -> Result<(), String> {
+fn receive_broadcasts(listener_socket: UdpSocket) -> Result<(), String> {
     println!("\n=============================================");
-    
-    println!("Ctrl+C to stop...");
+    println!("Listening for broadcast messages...");
+    println!("Press Ctrl+C to stop...");
     println!("=============================================");
 
-    
-    
-    // 缓冲区大小固定为 MESSAGE_TOTAL_SIZE
-    let mut buf = [0u8; MESSAGE_TOTAL_SIZE]; 
+    // Buffer capable of holding 40 messages
+    let mut buf = [0u8; MESSAGE_TOTAL_SIZE * 40]; 
 
     loop {
         match listener_socket.recv_from(&mut buf) {
             Ok((len, src)) => {
-                // 仅为了演示，我们跳过校验和检查。实际应用中应在此处验证 buf[0]
-                let checksum_ok = calculate_checksum(&buf) == buf[0]; 
-                if !checksum_ok {
-                    println!("check sum is bad");
+                // Slice the buffer to the actual received length
+                let received_data = &buf[..len];
+
+                // Split the received data into chunks of MESSAGE_TOTAL_SIZE
+                let chunks = received_data.chunks_exact(MESSAGE_TOTAL_SIZE);
+                
+                // Capture any trailing bytes that don't form a full message
+                let remainder = chunks.remainder();
+                if !remainder.is_empty() {
+                    eprintln!(
+                        "[{}] Warning: Received incomplete trailing data ({} bytes)", 
+                        src, remainder.len()
+                    );
                 }
-                // 假设校验和通过，进行解码
-                match decode_broadcast_message(&buf[..len]) {
-                    Ok(decoded_msg) => {
-                        println!("[{}] {}", src, decoded_msg);
-                    },
-                    Err(e) => {
-                        eprintln!("[{}] Error decoding message: {}", src, e);
+
+                // Iterate through each complete message chunk
+                for (index, chunk) in chunks.enumerate() {
+                    // 1. Verify Checksum for the specific chunk
+                    if calculate_checksum(chunk) != chunk[0] {
+                        eprintln!("[{}] Message #{} checksum failed, skipping", src, index);
+                        continue;
+                    }
+
+                    // 2. Decode the specific message chunk
+                    match decode_broadcast_message(chunk) {
+                        Ok(decoded_msg) => {
+                            println!("[{}] Message #{}: {}", src, index, decoded_msg);
+                        },
+                        Err(e) => {
+                            eprintln!("[{}] Message #{} decoding error: {}", src, index, e);
+                        }
                     }
                 }
             }
             Err(e) => {
-                // 忽略非致命错误，例如 EWOULDBLOCK 或 EAGAIN
+                // Ignore non-fatal interruption errors
                 if e.kind() == std::io::ErrorKind::Interrupted {
                     continue;
                 }
