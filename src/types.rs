@@ -123,8 +123,8 @@ pub struct BroadcastStats {
 
 // Match Result Structure (for MSG_TRADE_BROADCAST)
 #[derive(Debug, Clone)]
-pub struct MatchResult {
-    pub instance_tag: [u8; 16],    // 8-byte engine instance tag
+pub struct Trade {
+    pub instance_tag: [u8;16],
     pub product_id: u16,          // Product identifier (2 bytes)
     pub buy_order_id: u64,        // Buyer's order ID (8 bytes)
     pub sell_order_id: u64,       // Seller's order ID (8 bytes)
