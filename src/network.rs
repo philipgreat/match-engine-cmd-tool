@@ -59,7 +59,6 @@ pub fn create_multicast_listener(addr: &str) -> Result<UdpSocket, String> {
 
 
 
-
     // 4. 加入组播组
     if let IpAddr::V4(multicast_ip) = ip {
         socket.join_multicast_v4(&multicast_ip, &Ipv4Addr::UNSPECIFIED)

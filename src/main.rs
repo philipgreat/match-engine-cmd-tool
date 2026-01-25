@@ -165,17 +165,17 @@ fn receive_broadcasts(listener_socket: UdpSocket) -> Result<(), String> {
                 for (index, chunk) in chunks.enumerate() {
                     // 1. Verify Checksum for the specific chunk
                     if calculate_checksum(chunk) != chunk[0] {
-                        eprintln!("[{}] Message #{} checksum failed, skipping", src, index);
+                        eprintln!("[{}] Message #{} checksum failed, skipping", src, index+1);
                         continue;
                     }
 
                     // 2. Decode the specific message chunk
                     match decode_broadcast_message(chunk) {
                         Ok(decoded_msg) => {
-                            println!("[{}] Message #{}: {}", src, index, decoded_msg);
+                            println!("[{}] Message #{}: {}", src, index+1, decoded_msg);
                         },
                         Err(e) => {
-                            eprintln!("[{}] Message #{} decoding error: {}", src, index, e);
+                            eprintln!("[{}] Message #{} decoding error: {}", src, index+1, e);
                         }
                     }
                 }
