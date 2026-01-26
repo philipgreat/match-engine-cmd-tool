@@ -15,7 +15,7 @@ use network::{create_multicast_listener, send_message};
 use params::{Args, Command, SubmitArgs, CancelArgs};
 
 
-const DEFAULT_ORDER EXECUTION_ADDR: &str = "239.0.0.1:5000";
+const MSG_TRADE_BROADCAST: &str = "239.0.0.1:5000";
 const DEFAULT_STATUS_ADDR: &str = "239.0.0.2:5001";
 // 监听组播时，绑定地址需要包含端口，但IP通常是0.0.0.0
 // 为了简化，我们只监听 trade_addr 或 status_addr 的端口

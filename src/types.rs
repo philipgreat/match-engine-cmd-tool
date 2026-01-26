@@ -10,7 +10,7 @@ pub const MSG_ORDER_CANCEL: u8 = 2;      // Client -> Engine: Order cancellation
 
 
 
-pub const MSG_ORDER EXECUTION_BROADCAST: u8 = 10;  // Engine -> Client: Trade broadcast
+pub const MSG_TRADE_BROADCAST: u8 = 10;  // Engine -> Client: Trade broadcast
 pub const MSG_STATUS_BROADCAST: u8 = 11; // Engine -> Client: Status broadcast
 
 

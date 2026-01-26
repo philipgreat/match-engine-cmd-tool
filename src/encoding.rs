@@ -1,6 +1,6 @@
 // src/encoding.rs
 
-use crate::types::{Order, MESSAGE_TOTAL_SIZE, MSG_ORDER_SUBMIT,MSG_ORDER EXECUTION_BROADCAST,MSG_STATUS_BROADCAST};
+use crate::types::{Order, MESSAGE_TOTAL_SIZE, MSG_ORDER_SUBMIT,MSG_TRADE_BROADCAST,MSG_STATUS_BROADCAST};
 use crate::types::{Trade, BroadcastStats};
 
 use std::convert::TryInto; // 用于 slice 转固定大小数组
@@ -189,7 +189,7 @@ pub fn decode_broadcast_message(buf: &[u8]) -> Result<String, String> {
     // 假设校验和在网络接收前已经被检查
 
     match msg_type {
-        MSG_ORDER EXECUTION_BROADCAST => {
+        MSG_TRADE_BROADCAST => {
             let result = deserialize_match_result(buf)
                 .map_err(|e| format!("Failed to decode Trade: {}", e))?;
             //let tag = instance_tag_to_str(&result.instance_tag);
