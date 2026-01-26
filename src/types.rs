@@ -81,10 +81,10 @@ pub fn serialize_stats_result(stats: &BroadcastStats) -> [u8; MESSAGE_TOTAL_SIZE
 
     // 3. Order Book Size (u32)
     // Size: 4 bytes (FIXED from u64)
-    buf[current_idx..current_idx + 4].copy_from_slice(&stats.bids_size.to_be_bytes());
+    buf[current_idx..current_idx + 4].copy_from_slice(&stats.bid_order_count.to_be_bytes());
     current_idx += 4; // Index: 16
 
-    buf[current_idx..current_idx + 4].copy_from_slice(&stats.ask_size.to_be_bytes());
+    buf[current_idx..current_idx + 4].copy_from_slice(&stats.ask_order_count.to_be_bytes());
     current_idx += 4; // Index: 16
 
     // 4. Matched Orders (u32)
@@ -113,8 +113,8 @@ pub fn serialize_stats_result(stats: &BroadcastStats) -> [u8; MESSAGE_TOTAL_SIZE
 pub struct BroadcastStats {
     pub instance_tag: [u8; 16],      // 16-byte engine instance tag
     pub product_id: u16,            // Product identifier (2 bytes)
-    pub bids_size: u32,             // Current order book size (4 bytes)
-    pub ask_size: u32,              // Current order book size (4 bytes)
+    pub bid_order_count: u32,             // Current order book size (4 bytes)
+    pub ask_order_count: u32,              // Current order book size (4 bytes)
     pub matched_orders: u32,        // Total matched orders count (4 bytes)
     pub total_received_orders: u32, // Total received orders count (4 bytes)
     pub start_time: u64,            // Program start time (Nanoseconds) (8 bytes)

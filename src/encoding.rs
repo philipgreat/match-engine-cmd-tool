@@ -138,13 +138,13 @@ pub fn deserialize_stats_result(buf: &[u8]) -> Result<BroadcastStats, &'static s
     current_idx += 2;
 
     // 3. Bids Size (u32)
-    let bids_size_bytes: [u8; 4] = buf[current_idx..current_idx + 4].try_into().map_err(|_| "Failed to read bids_size")?;
-    let bids_size = u32::from_be_bytes(bids_size_bytes);
+    let bid_order_count_bytes: [u8; 4] = buf[current_idx..current_idx + 4].try_into().map_err(|_| "Failed to read bid_order_count")?;
+    let bid_order_count = u32::from_be_bytes(bid_order_count_bytes);
     current_idx += 4;
 
     // 4. Ask Size (u32)
-    let ask_size_bytes: [u8; 4] = buf[current_idx..current_idx + 4].try_into().map_err(|_| "Failed to read ask_size")?;
-    let ask_size = u32::from_be_bytes(ask_size_bytes);
+    let ask_order_count_bytes: [u8; 4] = buf[current_idx..current_idx + 4].try_into().map_err(|_| "Failed to read ask_order_count")?;
+    let ask_order_count = u32::from_be_bytes(ask_order_count_bytes);
     current_idx += 4;
 
     // 5. Matched Orders (u32)
@@ -165,8 +165,8 @@ pub fn deserialize_stats_result(buf: &[u8]) -> Result<BroadcastStats, &'static s
     Ok(BroadcastStats {
         instance_tag,
         product_id,
-        bids_size,
-        ask_size,
+        bid_order_count,
+        ask_order_count,
         matched_orders,
         total_received_orders,
         start_time,
@@ -203,9 +203,9 @@ pub fn decode_broadcast_message(buf: &[u8]) -> Result<String, String> {
             let stats = deserialize_stats_result(buf)
                 .map_err(|e| format!("Failed to decode BroadcastStats: {}", e))?;
 
-            Ok(format!("📊 STATUS: Tag={} | Product={} | BidSize={} | AskSize={} | Matched={} | Received={}", 
+            Ok(format!("📊 STATUS: Tag={} | Product={} | BidOrderCount={} | AskOrderCount={} | Matched={} | Received={}", 
                 std::str::from_utf8(&stats.instance_tag).unwrap(),
-                stats.product_id, stats.bids_size, stats.ask_size, stats.matched_orders, stats.total_received_orders))
+                stats.product_id, stats.bid_order_count, stats.ask_order_count, stats.matched_orders, stats.total_received_orders))
         },
         _ => Err(format!("Unknown or unhandled message type: {:?}", buf)),
     }
