@@ -119,6 +119,9 @@ pub struct BroadcastStats {
     pub total_received_orders: u32, // Total received orders count (4 bytes)
     pub start_time: u64,            // Program start time (Nanoseconds) (8 bytes)
                                     // Total Payload Size: 42 bytes
+    pub total_bid_volumn: u32,
+    pub total_ask_volumn: u32,
+
 }
 
 // Match Result Structure (for MSG_ORDER EXECUTION_BROADCAST)

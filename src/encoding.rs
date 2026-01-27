@@ -160,7 +160,17 @@ pub fn deserialize_stats_result(buf: &[u8]) -> Result<BroadcastStats, &'static s
     // 7. Start Time (u64)
     let start_time_bytes: [u8; 8] = buf[current_idx..current_idx + 8].try_into().map_err(|_| "Failed to read start_time")?;
     let start_time = u64::from_be_bytes(start_time_bytes);
-    // current_idx += 8; // 不需要再增加，因为这是最后一个字段
+    current_idx += 8; // 不需要再增加，因为这是最后一个字段
+
+    let total_bid_volumn_bytes: [u8; 4] = buf[current_idx..current_idx + 4].try_into().map_err(|_| "Failed to read total_ask_volumn_bytes")?;
+    let total_bid_volumn = u32::from_be_bytes(total_bid_volumn_bytes);
+    current_idx += 4;
+
+    
+    let total_ask_volumn_bytes: [u8; 4] = buf[current_idx..current_idx + 4].try_into().map_err(|_| "Failed to read total_ask_volumn_bytes")?;
+    let total_ask_volumn = u32::from_be_bytes(total_ask_volumn_bytes);
+  
+
 
     Ok(BroadcastStats {
         instance_tag,
@@ -170,6 +180,9 @@ pub fn deserialize_stats_result(buf: &[u8]) -> Result<BroadcastStats, &'static s
         matched_orders,
         total_received_orders,
         start_time,
+        total_bid_volumn,
+        total_ask_volumn
+
     })
 }
 
@@ -203,9 +216,13 @@ pub fn decode_broadcast_message(buf: &[u8]) -> Result<String, String> {
             let stats = deserialize_stats_result(buf)
                 .map_err(|e| format!("Failed to decode BroadcastStats: {}", e))?;
 
-            Ok(format!("📊 STATUS: Tag={} | Product={} | BidOrderCount={} | AskOrderCount={} | Matched={} | Received={}", 
+            Ok(format!("📊 STATUS: Tag={} | Product={} | BidOrderCount={} | AskOrderCount={} | Matched={} | Received={} | TotalBidVolumn={} | TotalAskVolumn={}", 
                 std::str::from_utf8(&stats.instance_tag).unwrap(),
-                stats.product_id, stats.bid_order_count, stats.ask_order_count, stats.matched_orders, stats.total_received_orders))
+                stats.product_id, stats.bid_order_count, stats.ask_order_count, stats.matched_orders, stats.total_received_orders,
+                stats.total_bid_volumn,stats.total_ask_volumn
+
+            
+            ))
         },
         _ => Err(format!("Unknown or unhandled message type: {:?}", buf)),
     }
